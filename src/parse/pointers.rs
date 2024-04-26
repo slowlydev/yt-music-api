@@ -31,10 +31,14 @@ pub const SEARCHED_SONGS: &str = "/contents/tabbedSearchResultsRenderer/tabs/0/t
 pub const SEARCHED_SONG_TITLE: &str = "/musicResponsiveListItemRenderer/flexColumns/0/musicResponsiveListItemFlexColumnRenderer/text/runs/0/text";
 pub const SEARCHED_SONG_ARTIST: &str = "/musicResponsiveListItemRenderer/flexColumns/1/musicResponsiveListItemFlexColumnRenderer/text/runs/0/text";
 pub const SEARCHED_SONG_ALBUM: &str = "/musicResponsiveListItemRenderer/flexColumns/1/musicResponsiveListItemFlexColumnRenderer/text/runs/2/text";
-
 pub const SEARCHED_SONG_DURATION: &str = "/musicResponsiveListItemRenderer/flexColumns/1/musicResponsiveListItemFlexColumnRenderer/text/runs/4/text";
-
 pub const SEARCHED_SONG_ID: &str = "/musicResponsiveListItemRenderer/playlistItemData/videoId";
-
 pub const SEARCHED_SONG_THUMBNAILS: &str =
     "/musicResponsiveListItemRenderer/thumbnail/musicThumbnailRenderer/thumbnail/thumbnails";
+
+pub const SONG_TITLE: &str = "/videoDetails/title";
+pub const SONG_ARTIST: &str = "/videoDetails/author";
+// album not possbile for now
+pub const SONG_DURATION: &str = "/videoDetails/lengthSeconds";
+pub const SONG_THUMBNAILS: &str = "/videoDetails/thumbnail/thumbnails";
+pub const SONG_ID: &str = "/videoDetails/videoId";

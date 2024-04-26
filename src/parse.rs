@@ -231,6 +231,30 @@ impl SongSearchResult {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct Song {
+    pub name: String,
+    pub artist: String,
+    // pub album: String, not possible as of now
+    pub thumbnails: Vec<String>,
+    pub duration: String,
+    pub video_id: String,
+}
+
+impl Song {
+    pub(crate) fn parse(res: Value) -> Result<Self, ResponseParseError> {
+        Ok(Song {
+            name: string_from_json(&res, SONG_TITLE)?,
+            artist: string_from_json(&res, SONG_ARTIST)?,
+            thumbnails: iter_from_json(&res, SONG_THUMBNAILS)?
+                .filter_map(|thumbnail| Some(string_from_json(&thumbnail, THUMBNAIL_URL).ok()?))
+                .collect(),
+            duration: string_from_json(&res, SONG_DURATION)?,
+            video_id: string_from_json(&res, SONG_ID)?,
+        })
+    }
+}
+
 fn value_from_json<'a>(value: &'a Value, pointer: &str) -> Result<&'a Value, ResponseParseError> {
     value
         .pointer(pointer)

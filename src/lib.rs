@@ -21,16 +21,19 @@ async fn main() {
     let songs = client.search_songs("odesza loyal").await.unwrap();
     println!("songs: {:#?}", songs);
 
-    // println!("searching for artist");
-    // let results = client.search_artists("Rammstein").await.unwrap();
+    println!("searching for song with id 2BeoKB1qCZ4");
+    let song = client.get_song("2BeoKB1qCZ4").await.unwrap();
+    println!("song: {:#?}", song);
 
-    // println!("requesting: {}", results[0].name);
-    // let artist = client.get_artist(&results[0].browse_id).await.unwrap();
+    println!("searching for artist");
+    let results = client.search_artists("odesza").await.unwrap();
 
-    // println!("requesting album: {}", artist.albums[0].name);
-    // let album = client.get_album(&artist.albums[0].browse_id).await.unwrap();
+    println!("requesting: {}", results[0].name);
+    let artist = client.get_artist(&results[0].browse_id).await.unwrap();
 
-    // println!("album: {:#?}", album);
+    println!("requesting album: {}", artist.albums[0].name);
+    let album = client.get_album(&artist.albums[0].browse_id).await.unwrap();
+    println!("album: {:#?}", album);
 }
 
 #[derive(Clone, Debug)]
@@ -127,13 +130,25 @@ impl Client {
         Ok(SongSearchResult::parse(res)?)
     }
 
+    pub async fn get_song(self: &Self, video_id: &str) -> Result<Song, Box<dyn Error>> {
+        let body_vars = json!({
+         "videoId": video_id,
+        })
+        .as_object()
+        .unwrap()
+        .to_owned();
+
+        let res = create_api_request(&self.config, "player", body_vars).await?;
+        Ok(Song::parse(res)?)
+    }
+
     /// Request configs from Youtube music
     ///
     /// ```no_run
     /// #[tokio::main]
     /// async fn main() {
     ///     let client = yt_music_api::Client::init().await.unwrap();
-    ///     
+    ///
     ///     dbg!(client);
     /// }
     /// ```
