@@ -3,7 +3,6 @@ use std::error::Error;
 use std::fmt::Display;
 
 use serde_json::Value;
-use tracing::trace;
 
 //const BAD_TYPE_MSG: &str = "recieved value in an incorrect type";
 

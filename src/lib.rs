@@ -64,7 +64,7 @@ impl Client {
         )
         .await?;
 
-        debug!("response: {:#?}", res);
+        debug!("response: {}", res.to_string());
 
         Ok(Artist::parse(res)?)
     }
@@ -89,7 +89,7 @@ impl Client {
         let res = create_api_request(&self.config, "browse", endpoint_context("ALBUM", browse_id))
             .await?;
 
-        debug!("response: {:#?}", res);
+        debug!("response: {}", res.to_string());
 
         Ok(Album::parse(res)?)
     }
@@ -121,7 +121,7 @@ impl Client {
 
         let res = create_api_request(&self.config, "search", body_vars).await?;
 
-        debug!("response: {:#?}", res);
+        debug!("response: {}", res.to_string());
 
         Ok(ArtistSearchResult::parse(res)?)
     }
@@ -141,7 +141,7 @@ impl Client {
 
         let res = create_api_request(&self.config, "search", body_vars).await?;
 
-        debug!("response: {:#?}", res);
+        debug!("response: {}", res.to_string());
 
         Ok(SongSearchResult::parse(res)?)
     }
@@ -157,7 +157,7 @@ impl Client {
 
         let res = create_api_request(&self.config, "player", body_vars).await?;
 
-        debug!("response: {:#?}", res);
+        debug!("response: {}", res.to_string());
 
         Ok(Song::parse(res)?)
     }
