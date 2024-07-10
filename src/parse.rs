@@ -19,6 +19,7 @@ pub struct Artist {
 }
 
 impl Artist {
+    #[tracing::instrument]
     pub(crate) fn parse(res: Value) -> Result<Self, ResponseParseError> {
         Ok(Artist {
             name: string_from_json(&res, ARTIST_NAME)?,
@@ -49,6 +50,7 @@ impl Artist {
     }
 
     /// Get both albums and singles
+    #[tracing::instrument]
     pub fn products(&self) -> Vec<&Product> {
         self.albums.iter().chain(&self.singles).collect()
     }
@@ -78,6 +80,7 @@ impl Product {
     ///     }
     /// }
     /// ```
+    #[tracing::instrument]
     pub async fn request(self: &Self, client: &Client) -> Result<Album, Box<dyn Error>> {
         client.get_album(&self.browse_id).await
     }
@@ -93,6 +96,7 @@ pub struct Album {
 }
 
 impl Album {
+    #[tracing::instrument]
     pub(crate) fn parse(res: Value) -> Result<Self, ResponseParseError> {
         Ok(Album {
             name: string_from_json(&res, ALBUM_NAME)?,
@@ -170,6 +174,7 @@ pub struct ArtistSearchResult {
 }
 
 impl ArtistSearchResult {
+    #[tracing::instrument]
     pub(crate) fn parse(res: Value) -> Result<Vec<Self>, ResponseParseError> {
         Ok(iter_from_json(&res, SEARCHED_ARTISTS)?
             .filter_map(|item| -> Option<Self> {
@@ -194,6 +199,7 @@ impl ArtistSearchResult {
     ///     }
     /// }
     /// ```
+    #[tracing::instrument]
     pub async fn request(self: &Self, client: &Client) -> Result<Artist, Box<dyn Error>> {
         client.get_artist(&self.browse_id).await
     }
@@ -210,6 +216,7 @@ pub struct SongSearchResult {
 }
 
 impl SongSearchResult {
+    #[tracing::instrument]
     pub(crate) fn parse(res: Value) -> Result<Vec<Self>, ResponseParseError> {
         Ok(iter_from_json(&res, SEARCHED_SONGS)?
             .filter_map(|item| -> Option<Self> {
@@ -242,6 +249,7 @@ pub struct Song {
 }
 
 impl Song {
+    #[tracing::instrument]
     pub(crate) fn parse(res: Value) -> Result<Self, ResponseParseError> {
         Ok(Song {
             name: string_from_json(&res, SONG_TITLE)?,
@@ -255,12 +263,14 @@ impl Song {
     }
 }
 
+#[tracing::instrument]
 fn value_from_json<'a>(value: &'a Value, pointer: &str) -> Result<&'a Value, ResponseParseError> {
     value
         .pointer(pointer)
         .ok_or(ResponseParseError::MissingValue(pointer.to_string()))
 }
 
+#[tracing::instrument]
 fn string_from_json(value: &Value, pointer: &str) -> Result<String, ResponseParseError> {
     match value_from_json(value, pointer)?.as_str() {
         Some(it) => Ok(it.to_string()),
@@ -271,6 +281,7 @@ fn string_from_json(value: &Value, pointer: &str) -> Result<String, ResponsePars
     }
 }
 
+#[tracing::instrument]
 fn iter_from_json<'a>(
     value: &'a Value,
     pointer: &str,
@@ -284,6 +295,7 @@ fn iter_from_json<'a>(
     }
 }
 
+#[tracing::instrument]
 fn thumbnails_from_json<'a>(
     value: &'a Value,
     pointer: &str,

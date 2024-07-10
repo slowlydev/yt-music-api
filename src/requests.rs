@@ -3,6 +3,7 @@ use serde_json::{json, Map, Value};
 
 use crate::{config::YoutubeConfig, BASE_URL};
 
+#[tracing::instrument]
 pub(crate) async fn create_api_request(
     config: &YoutubeConfig,
     endpoint_name: &str,
@@ -50,6 +51,7 @@ pub(crate) async fn create_api_request(
     Ok(res)
 }
 
+#[tracing::instrument]
 pub(crate) fn endpoint_context(type_name: &str, browse_id: &str) -> Map<String, Value> {
     json!({
         "browseEndpointContextSupportedConfigs": {
@@ -64,6 +66,7 @@ pub(crate) fn endpoint_context(type_name: &str, browse_id: &str) -> Map<String, 
     .to_owned()
 }
 
+#[tracing::instrument]
 pub(crate) fn api_context(config: &YoutubeConfig) -> Map<String, Value> {
     json!({
         "context": {

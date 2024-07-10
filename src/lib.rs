@@ -1,5 +1,6 @@
 use serde_json::{json, Map, Value};
 use std::{collections::HashMap, error::Error};
+use tracing::debug;
 
 mod config;
 mod parse;
@@ -54,6 +55,7 @@ impl Client {
     ///     }
     /// }
     /// ```
+    #[tracing::instrument]
     pub async fn get_artist(self: &Self, browse_id: &str) -> Result<Artist, Box<dyn Error>> {
         let res = create_api_request(
             &self.config,
@@ -61,6 +63,8 @@ impl Client {
             endpoint_context("ARTIST", browse_id),
         )
         .await?;
+
+        debug!("response: {:#?}", res);
 
         Ok(Artist::parse(res)?)
     }
@@ -80,9 +84,12 @@ impl Client {
     ///     }
     /// }
     /// ```
+    #[tracing::instrument]
     pub async fn get_album(self: &Self, browse_id: &str) -> Result<Album, Box<dyn Error>> {
         let res = create_api_request(&self.config, "browse", endpoint_context("ALBUM", browse_id))
             .await?;
+
+        debug!("response: {:#?}", res);
 
         Ok(Album::parse(res)?)
     }
@@ -99,6 +106,7 @@ impl Client {
     ///     }
     /// }
     /// ```
+    #[tracing::instrument]
     pub async fn search_artists(
         self: &Self,
         query: &str,
@@ -110,10 +118,15 @@ impl Client {
         .as_object()
         .unwrap()
         .to_owned();
+
         let res = create_api_request(&self.config, "search", body_vars).await?;
+
+        debug!("response: {:#?}", res);
+
         Ok(ArtistSearchResult::parse(res)?)
     }
 
+    #[tracing::instrument]
     pub async fn search_songs(
         self: &Self,
         query: &str,
@@ -127,9 +140,13 @@ impl Client {
         .to_owned();
 
         let res = create_api_request(&self.config, "search", body_vars).await?;
+
+        debug!("response: {:#?}", res);
+
         Ok(SongSearchResult::parse(res)?)
     }
 
+    #[tracing::instrument]
     pub async fn get_song(self: &Self, video_id: &str) -> Result<Song, Box<dyn Error>> {
         let body_vars = json!({
          "videoId": video_id,
@@ -139,6 +156,9 @@ impl Client {
         .to_owned();
 
         let res = create_api_request(&self.config, "player", body_vars).await?;
+
+        debug!("response: {:#?}", res);
+
         Ok(Song::parse(res)?)
     }
 
@@ -152,6 +172,7 @@ impl Client {
     ///     dbg!(client);
     /// }
     /// ```
+    #[tracing::instrument]
     pub async fn init() -> Result<Client, Box<dyn Error>> {
         let client = reqwest::Client::new();
 

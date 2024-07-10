@@ -3,6 +3,7 @@ use std::error::Error;
 use std::fmt::Display;
 
 use serde_json::Value;
+use tracing::trace;
 
 //const BAD_TYPE_MSG: &str = "recieved value in an incorrect type";
 
@@ -45,6 +46,7 @@ impl YoutubeConfig {
     }
 }
 
+#[tracing::instrument]
 fn str_from_full(
     full_config: &HashMap<String, Value>,
     key: &str,
@@ -63,6 +65,7 @@ fn str_from_full(
     }
 }
 
+#[tracing::instrument]
 fn i64_from_full(full_config: &HashMap<String, Value>, key: &str) -> Result<i64, ConfigParseError> {
     match full_config.get(key) {
         Some(it) => it.as_i64().ok_or(ConfigParseError::BadConfigParameter {
@@ -75,6 +78,7 @@ fn i64_from_full(full_config: &HashMap<String, Value>, key: &str) -> Result<i64,
     }
 }
 
+#[tracing::instrument]
 fn bool_from_full(
     full_config: &HashMap<String, Value>,
     key: &str,
